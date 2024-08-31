@@ -1,4 +1,4 @@
-use emulator::{decoder::Decoder, fetcher::Fetcher};
+use emulator::{decoder::{Decoder, Instruction}, fetcher::Fetcher};
 use std::fs::File;
 
 pub mod window;
@@ -9,7 +9,6 @@ fn main() {
     let first_instruction = fetcher.fetch_instruction();
     assert_eq!(first_instruction, 0x1202);
     let decoder = Decoder::new();
-    if let Some(instr) = decoder.simple_instruction_map.get(&0x00E0) {
-        instr.execute();
-    }
+    let instr: &Instruction = decoder.decode_opcode(first_instruction).unwrap();
+    instr(first_instruction);
 }
