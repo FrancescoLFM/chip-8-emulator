@@ -6,10 +6,10 @@ pub struct Fetcher {
 }
 
 impl Fetcher {
-    pub fn new() -> Self {
+    pub fn new(mem: Memory) -> Self {
         Fetcher {
             pc: 0,
-            memory: Memory::new(),
+            memory: mem,
         }
     }
 
