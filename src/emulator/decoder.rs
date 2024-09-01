@@ -1,17 +1,25 @@
 use std::collections::HashMap;
+use super::cpu::Cpu;
 
 const OPCODE_MASK: u16 = 0xF000; 
 const ADDRESS_MASK: u16 = 0x0FFF;
+const ROM_START: u16 = 0x0200;
 
-fn cls(_code: u16) {
+fn cls(_code: u16, _cpu: &mut Cpu) {
     println!("Clearing the screen");
 }
 
-fn jmp(code: u16) {
+fn jmp(code: u16, cpu: &mut Cpu) {
+    let addr = code & ADDRESS_MASK;
+    if addr < ROM_START {
+        panic!("Jump to invalid memory address: 0x{:x}", addr);
+    }
+
+    cpu.jmp(addr - ROM_START);
     println!("Jumping to 0x{:x}", code & ADDRESS_MASK);
 }
 
-pub type Instruction = fn(u16);
+pub type Instruction = fn(u16, &mut Cpu);
 
 pub struct Decoder {
     instruction_map: HashMap<u16, Instruction>,
