@@ -1,9 +1,9 @@
-use super::{decoder::Decoder, fetcher::Fetcher, memory::Memory};
+use super::{decoder::{Decoder, Instruction}, fetcher::Fetcher, memory::Memory};
 
 const REG_NUM: usize = 16;
 const STACK_SIZE: usize = 16;
 
-struct Cpu {
+pub struct Cpu {
     fetcher: Fetcher,
     decoder: Decoder,
     addr_reg: u16,
@@ -46,7 +46,15 @@ impl Cpu{
         self.reg_file[reg]
     }
 
-    pub fn start_rom(&self) {
-        
+    pub fn jmp(&mut self, addr: u16) {
+        self.fetcher.pc_set(addr as usize);
+    }
+
+    pub fn start_rom(&mut self) {
+        loop {
+            let opcode: u16 = self.fetcher.fetch_instruction();
+            let instr: &Instruction = self.decoder.decode_opcode(opcode).unwrap();
+            instr(opcode, self);
+        }
     }
 }

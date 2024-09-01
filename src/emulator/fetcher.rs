@@ -1,5 +1,4 @@
-use super::memory::{Memory, MemoryDirection};
-use std::fs::File;
+use super::memory::Memory;
 pub struct Fetcher {
     pc: usize,
     memory: Memory,
@@ -16,6 +15,10 @@ impl Fetcher {
     pub fn load_rom_mem(&mut self, rom: &str) {
         self.memory.load_rom(rom);
         ()
+    }
+
+    pub fn pc_set(&mut self, addr: usize) {
+        self.pc = addr;
     }
 
     pub fn fetch_instruction(&mut self) -> u16 {
